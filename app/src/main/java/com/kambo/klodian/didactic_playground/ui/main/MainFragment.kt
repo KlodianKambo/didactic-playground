@@ -8,18 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import com.kambo.klodian.didactic_playground.R
 
+/**
+ *
+ * A [fragment](https://developer.android.com/guide/fragments)
+ * is a piece of the User Interface contained in an Activity.
+ * It' can't exist outside of an activity, and it depends on that.
+ * Has his own life cycle [Fragment lifecycle](https://developer.android.com/guide/fragments/lifecycle)
+ */
 class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
     }
 
+    // provides the ui data
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
     }
 
     override fun onCreateView(

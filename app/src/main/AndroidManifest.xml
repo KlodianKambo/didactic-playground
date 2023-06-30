@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Didacticplayground"
-        android:name=".ui.main.DidacticPlaygroundApp"
+        android:name=".DidacticPlaygroundApp"
         tools:targetApi="31">
 
         <activity

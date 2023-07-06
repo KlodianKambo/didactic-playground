@@ -18,8 +18,6 @@ import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
  * Has his own life cycle [Fragment lifecycle](https://developer.android.com/guide/fragments/lifecycle)
  */
 class MainFragment : Fragment() {
-    private lateinit var binding: FragmentMainBinding
-
     companion object {
         fun newInstance() = MainFragment()
     }
@@ -33,22 +31,115 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
-        binding = FragmentMainBinding.bind(view)
+        // Can be made more readable with private functions that will add just one component
+        // then add behaviours like click listeners etc...
+        val rootView = inflater.inflate(R.layout.fragment_main, container, false)
+        val relativeLayout = rootView.findViewById<RelativeLayout>(R.id.relativeLayout)
 
-        // hook click listener to button
-        // setOnClickListener is from View, button inherits from View. See inheritance of the OOP
-        binding.button.setOnClickListener {
-            val name = binding.editText.text?.toString()
+        val textView = TextView(requireContext())
+        textView.id = View.generateViewId()
+        textView.text = "Hello World!"
+        textView.textSize = 24f
+        val textLayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        textLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
+        textLayoutParams.topMargin = 16.dpToPx()
+        relativeLayout.addView(textView, textLayoutParams)
+
+        val button = Button(requireContext())
+        button.text = "Click Me"
+        button.id = View.generateViewId()
+        val buttonLayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        buttonLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
+        buttonLayoutParams.addRule(RelativeLayout.BELOW, textView.id)
+        buttonLayoutParams.topMargin = 16.dpToPx()
+        relativeLayout.addView(button, buttonLayoutParams)
+
+        val editText = EditText(requireContext())
+        editText.hint = "Enter your name"
+        editText.id = View.generateViewId()
+        val editLayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        editLayoutParams.addRule(RelativeLayout.BELOW, button.id)
+        editLayoutParams.topMargin = 16.dpToPx()
+        editLayoutParams.marginStart = 16.dpToPx()
+        editLayoutParams.marginEnd = 16.dpToPx()
+        relativeLayout.addView(editText, editLayoutParams)
+
+        // confusion since you need first to add the edit text then get set the button click listener
+        button.setOnClickListener {
+            val name = editText.text?.toString()
             Toast.makeText(requireContext(), "Hello, $name!", Toast.LENGTH_SHORT).show()
         }
 
-        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val radioButton: RadioButton = view.findViewById(checkedId)
+        val checkBox = CheckBox(requireContext())
+        checkBox.id = View.generateViewId()
+        checkBox.text = "Agree to Terms"
+        val checkLayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        checkLayoutParams.addRule(RelativeLayout.BELOW, editText.id)
+        checkLayoutParams.topMargin = 16.dpToPx()
+        checkLayoutParams.marginStart = 16.dpToPx()
+        checkLayoutParams.marginEnd = 16.dpToPx()
+        relativeLayout.addView(checkBox, checkLayoutParams)
+
+        val radioGroup = RadioGroup(requireContext())
+        radioGroup.id = View.generateViewId()
+        val radioGroupLayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        radioGroupLayoutParams.addRule(RelativeLayout.BELOW, checkBox.id)
+        radioGroupLayoutParams.topMargin = 16.dpToPx()
+        radioGroupLayoutParams.marginStart = 16.dpToPx()
+        radioGroupLayoutParams.marginEnd = 16.dpToPx()
+        relativeLayout.addView(radioGroup, radioGroupLayoutParams)
+
+        val radio1 = RadioButton(requireContext())
+        radio1.text = "Option 1"
+        val radio1LayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        radio1LayoutParams.topMargin = 16.dpToPx()
+        radioGroup.addView(radio1, radio1LayoutParams)
+
+        val radio2 = RadioButton(requireContext())
+        radio2.text = "Option 2"
+        val radio2LayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        radio2LayoutParams.addRule(RelativeLayout.BELOW, radio1.id)
+        radio2LayoutParams.topMargin = 16.dpToPx()
+        radioGroup.addView(radio2, radio2LayoutParams)
+
+        val radio3 = RadioButton(requireContext())
+        radio3.text = "Option 3"
+        val radio3LayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        radio3LayoutParams.addRule(RelativeLayout.BELOW, radio2.id)
+        radio3LayoutParams.topMargin = 16.dpToPx()
+        radioGroup.addView(radio3, radio3LayoutParams)
+
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val radioButton: RadioButton = relativeLayout.findViewById(checkedId)
             val selectedOption = radioButton.text.toString()
             Toast.makeText(
                 requireContext(),
@@ -56,25 +147,29 @@ class MainFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        addSpinner()
-        return view
-    }
 
-    private fun addSpinner() {
-        // Spinner options
+        val spinner = Spinner(requireContext())
+        val spinnerLayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        spinnerLayoutParams.addRule(RelativeLayout.BELOW, radioGroup.id)
+        spinnerLayoutParams.topMargin = 16.dpToPx()
+        spinnerLayoutParams.marginStart = 16.dpToPx()
+        spinnerLayoutParams.marginEnd = 16.dpToPx()
+        relativeLayout.addView(spinner, spinnerLayoutParams)
+
         val spinnerData = listOf("Option 1", "Option 2", "Option 3")
-        val spinnerAdapter: ArrayAdapter<String> =
-            ArrayAdapter<String>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                spinnerData
-            )
+        val spinnerAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            spinnerData
+        )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        binding.spinner.adapter = spinnerAdapter
+        spinner.adapter = spinnerAdapter
 
         // Spinner selection
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
@@ -92,5 +187,12 @@ class MainFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        return rootView
+    }
+
+    private fun Int.dpToPx(): Int {
+        val density = resources.displayMetrics.density
+        return (this * density + 0.5f).toInt()
     }
 }

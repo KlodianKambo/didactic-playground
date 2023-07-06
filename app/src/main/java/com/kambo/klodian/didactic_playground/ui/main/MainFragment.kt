@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.kambo.klodian.didactic_playground.R
+import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
 
 /**
  *
@@ -17,13 +18,7 @@ import com.kambo.klodian.didactic_playground.R
  * Has his own life cycle [Fragment lifecycle](https://developer.android.com/guide/fragments/lifecycle)
  */
 class MainFragment : Fragment() {
-
-    private var textView: TextView? = null
-    private var button: Button? = null
-    private var editText: EditText? = null
-    private var checkBox: CheckBox? = null
-    private var radioGroup: RadioGroup? = null
-    private var spinner: Spinner? = null
+    private lateinit var binding: FragmentMainBinding
 
     companion object {
         fun newInstance() = MainFragment()
@@ -43,17 +38,16 @@ class MainFragment : Fragment() {
     ): View {
 
         val view = inflater.inflate(R.layout.fragment_main, container, false)
-
-        bindViews(view)
+        binding = FragmentMainBinding.bind(view)
 
         // hook click listener to button
         // setOnClickListener is from View, button inherits from View. See inheritance of the OOP
-        button?.setOnClickListener {
-            val name = editText?.text?.toString()
+        binding.button.setOnClickListener {
+            val name = binding.editText.text?.toString()
             Toast.makeText(requireContext(), "Hello, $name!", Toast.LENGTH_SHORT).show()
         }
 
-        radioGroup?.setOnCheckedChangeListener { group, checkedId ->
+        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radioButton: RadioButton = view.findViewById(checkedId)
             val selectedOption = radioButton.text.toString()
             Toast.makeText(
@@ -62,9 +56,7 @@ class MainFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-
         addSpinner()
-
         return view
     }
 
@@ -79,10 +71,10 @@ class MainFragment : Fragment() {
             )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        spinner?.adapter = spinnerAdapter
+        binding.spinner.adapter = spinnerAdapter
 
         // Spinner selection
-        spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
@@ -100,19 +92,5 @@ class MainFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-    }
-
-
-    /***********************************************************************************************
-     * Private fun
-     **********************************************************************************************/
-    private fun bindViews(view: View) {
-        // bind view's components with the xml components
-        textView = view.findViewById(R.id.textView)
-        button = view.findViewById(R.id.button)
-        editText = view.findViewById(R.id.editText)
-        checkBox = view.findViewById(R.id.checkBox)
-        spinner = view.findViewById(R.id.spinner)
-        radioGroup = view.findViewById(R.id.radioGroup)
     }
 }

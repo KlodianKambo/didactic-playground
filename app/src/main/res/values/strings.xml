@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">didactic-playground</string>
+    <string name="child_number">Figlio numero %1$d</string>
 </resources>

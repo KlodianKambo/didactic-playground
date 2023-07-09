@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/size12"
+    android:layout_margin="@dimen/size12"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_margin="@dimen/size12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:id="@+id/tvChildNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+
+        <EditText
+            android:layout_marginTop="@dimen/size8"
+            android:id="@+id/etChildName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome" />
+
+        <EditText
+            android:layout_marginTop="@dimen/size8"
+            android:id="@+id/etChildSurname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cognome" />
+
+        <EditText
+            android:layout_marginBottom="@dimen/size8"
+            android:layout_marginTop="@dimen/size8"
+            android:id="@+id/etChildBirthDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Data di nascita" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

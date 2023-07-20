@@ -1,8 +1,12 @@
 package com.kambo.klodian.didactic_playground
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import com.kambo.klodian.didactic_playground.ui.main.MainFragment
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.kambo.klodian.didactic_playground.databinding.ActivityMainBinding
 
 
 /**
@@ -16,21 +20,38 @@ class MainActivity : AppCompatActivity() {
     /**
      * [Lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle#alc)
      */
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // sets the layout to be rendered for this activity
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // this statement provides a guarantee to not replace the fragment on rotation
-        if (savedInstanceState == null) {
-            // fragmentManager already handles the transaction
-            // without this code you will add to the fragment manager an additional
-            // replace transaction for every rotation you make. You will have n + 1 fragments in the fragment
-            // manager where n = number of device rotations
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
-                .commitNow()
+
+        binding.buttonStartActivity.setOnClickListener {
+            // Example usage of startActivity
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.buttonStartActivityForResult.setOnClickListener {
+            // Example usage of startActivityForResult using ActivityResultLauncher
+            val intent = Intent(this, SecondActivity::class.java)
+            getResultActivityLauncher().launch(intent)
+        }
+    }
+
+    private fun getResultActivityLauncher(): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val resultData = result.data?.getStringExtra("RESULT_DATA")
+                // Handle the result data from the SecondActivity here
+                binding.resultTextView.text = resultData
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                // Handle the case where the SecondActivity was canceled
+                binding.resultTextView.text = "Cancelled"
+            }
         }
     }
 }

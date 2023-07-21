@@ -22,12 +22,25 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var launcher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        launcher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val resultData = result.data?.getStringExtra("RESULT_DATA")
+                    // Handle the result data from the SecondActivity here
+                    binding.resultTextView.text = resultData
+                } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                    // Handle the case where the SecondActivity was canceled
+                    binding.resultTextView.text = "Cancelled"
+                }
+            }
 
         binding.buttonStartActivity.setOnClickListener {
             // Example usage of startActivity
@@ -38,20 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonStartActivityForResult.setOnClickListener {
             // Example usage of startActivityForResult using ActivityResultLauncher
             val intent = Intent(this, SecondActivity::class.java)
-            getResultActivityLauncher().launch(intent)
-        }
-    }
-
-    private fun getResultActivityLauncher(): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val resultData = result.data?.getStringExtra("RESULT_DATA")
-                // Handle the result data from the SecondActivity here
-                binding.resultTextView.text = resultData
-            } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                // Handle the case where the SecondActivity was canceled
-                binding.resultTextView.text = "Cancelled"
-            }
+            launcher.launch(intent)
         }
     }
 }

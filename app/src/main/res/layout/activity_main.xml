@@ -34,4 +34,30 @@
         app:layout_constraintStart_toStartOf="@+id/buttonStartActivityForResult"
         app:layout_constraintTop_toBottomOf="@+id/buttonStartActivityForResult" />
 
+    <Button
+        android:id="@+id/selectImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select image"
+        app:layout_constraintEnd_toEndOf="@+id/selectedImage"
+        app:layout_constraintStart_toStartOf="@+id/selectedImage"
+        app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
+
+    <Button
+        android:id="@+id/saveImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save image"
+        app:layout_constraintEnd_toEndOf="@+id/selectedImage"
+        app:layout_constraintStart_toStartOf="@+id/selectedImage"
+        app:layout_constraintTop_toBottomOf="@+id/selectImageButton" />
+
+    <ImageView
+        android:id="@+id/selectedImage"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        app:layout_constraintEnd_toEndOf="@+id/resultTextView"
+        app:layout_constraintStart_toStartOf="@+id/resultTextView"
+        app:layout_constraintTop_toBottomOf="@+id/resultTextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

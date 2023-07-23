@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.kambo.klodian.didactic_playground.R
 import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
+import com.kambo.klodian.didactic_playground.ui.main.adapter.PersonListAdapter
 
 /**
  *
@@ -43,7 +43,7 @@ class MainFragment : Fragment() {
         biding = FragmentMainBinding.bind(view)
         biding.rv.layoutManager = LinearLayoutManager(requireContext())
 
-        val adapter = PersonAdapter(viewModel.getContacts()) {
+        val adapter = PersonListAdapter {
             Toast.makeText(
                 requireContext(),
                 "Hi, I'm ${it.name} ${it.surname}. I'm ${it.age}, and i live at ${it.address}",
@@ -51,6 +51,8 @@ class MainFragment : Fragment() {
             ).show()
         }
         biding.rv.adapter = adapter
+
+        adapter.submitList(viewModel.getContacts())
 
         return view
     }

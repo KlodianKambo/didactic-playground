@@ -1,15 +1,16 @@
-package com.kambo.klodian.didactic_playground.ui.main
+package com.kambo.klodian.didactic_playground.ui.main.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.kambo.klodian.didactic_playground.R
 import com.kambo.klodian.didactic_playground.databinding.ItemPersonBinding
 import com.kambo.klodian.didactic_playground.ui.main.entities.UiPerson
 
-class PersonAdapter(private val personList: List<UiPerson>, private val action: ((uiPerson: UiPerson) -> Unit)?) : RecyclerView.Adapter<PersonViewHolder>() {
+class PersonListAdapter(private val action: ((uiPerson: UiPerson) -> Unit)?) :
+    ListAdapter<UiPerson, PersonViewHolder>(
+        PersonDiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -18,20 +19,15 @@ class PersonAdapter(private val personList: List<UiPerson>, private val action: 
     }
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        val currentPerson = personList[position]
-        holder.bind(currentPerson, action)
-    }
-
-    override fun getItemCount(): Int {
-        return personList.size
+        holder.bind(getItem(position), action)
     }
 }
 
-
-class PersonViewHolder(private val binding: ItemPersonBinding) : RecyclerView.ViewHolder(binding.root) {
+class PersonViewHolder(private val binding: ItemPersonBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(currentPerson: UiPerson, action: ((uiPerson: UiPerson) -> Unit)?) {
-        with(binding){
+        with(binding) {
             textName.text = currentPerson.name
             textSurname.text = currentPerson.surname
             textAge.text = "Age: ${currentPerson.age}"

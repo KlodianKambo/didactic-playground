@@ -6,7 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kambo.klodian.didactic_playground.R
+import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
 
 /**
  *
@@ -23,6 +27,7 @@ class MainFragment : Fragment() {
 
     // provides the ui data
     private lateinit var viewModel: MainViewModel
+    private lateinit var biding: FragmentMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +38,21 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        biding = FragmentMainBinding.bind(view)
+        biding.rv.layoutManager = LinearLayoutManager(requireContext())
+
+        val adapter = PersonAdapter(viewModel.getContacts()) {
+            Toast.makeText(
+                requireContext(),
+                "Hi, I'm ${it.name} ${it.surname}. I'm ${it.age}, and i live at ${it.address}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        biding.rv.adapter = adapter
+
+        return view
     }
 
 }

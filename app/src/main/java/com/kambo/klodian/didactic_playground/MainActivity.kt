@@ -1,21 +1,12 @@
 package com.kambo.klodian.didactic_playground
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.kambo.klodian.didactic_playground.ui.main.MainFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-
-/**
- * [Activity](https://developer.android.com/guide/components/activities/activity-lifecycle)
- * Amongst the 4 main components of an android application,
- * activities are the only one capable of hosting the User Interface
- * and it's building blocks, Views  .
- */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    /**
-     * [Lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle#alc)
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

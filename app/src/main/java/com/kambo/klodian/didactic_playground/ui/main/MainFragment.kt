@@ -1,39 +1,52 @@
 package com.kambo.klodian.didactic_playground.ui.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kambo.klodian.didactic_playground.R
+import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
+import com.kambo.klodian.didactic_playground.ui.main.adapter.UserAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-/**
- *
- * A [fragment](https://developer.android.com/guide/fragments)
- * is a piece of the User Interface contained in an Activity.
- * It' can't exist outside of an activity, and it depends on that.
- * Has his own life cycle [Fragment lifecycle](https://developer.android.com/guide/fragments/lifecycle)
- */
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
     }
 
-    // provides the ui data
-    private lateinit var viewModel: MainViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: FragmentMainBinding
+    private val userAdapter = UserAdapter {
+        viewModel.userSelected(it)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        binding = FragmentMainBinding.bind(view)
+        return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.fetchUser()
+
+        binding.rv.layoutManager = LinearLayoutManager(requireContext())
+        binding.rv.adapter = userAdapter
+
+        lifecycleScope.launch {
+            viewModel.userFlow.collect{
+                userAdapter.submitList(it)
+            }
+        }
+    }
 }

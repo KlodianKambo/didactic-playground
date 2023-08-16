@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import com.kambo.klodian.didactic_playground.R
-import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
+import com.kambo.klodian.didactic_playground.databinding.FragmentSearchBinding
 
 /**
  *
@@ -14,26 +14,24 @@ import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
  * It' can't exist outside of an activity, and it depends on that.
  * Has his own life cycle [Fragment lifecycle](https://developer.android.com/guide/fragments/lifecycle)
  */
-class MainFragment : Fragment(R.layout.fragment_main) {
+class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = FragmentSearch()
     }
 
     // provides the ui data
-    private lateinit var viewModel: MainViewModel
-    private lateinit var binding : FragmentMainBinding
+    private lateinit var viewModel: SearchViewModel
+    private lateinit var binding : FragmentSearchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentMainBinding.bind(view)
+        binding = FragmentSearchBinding.bind(view)
     }
 
 }
-
-class BFragment : Fragment(R.layout.fragment_b)

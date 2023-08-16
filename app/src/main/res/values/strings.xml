@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">didactic-playground</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="learn">Learn</string>
 </resources>

@@ -14,6 +14,6 @@ import androidx.lifecycle.ViewModel
  *
  * viewModel.selectMusic(UiMusic(...))
  */
-class MainViewModel : ViewModel() {
+class SearchViewModel : ViewModel() {
 
 }

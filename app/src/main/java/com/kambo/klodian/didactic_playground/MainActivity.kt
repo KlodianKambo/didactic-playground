@@ -1,17 +1,18 @@
 package com.kambo.klodian.didactic_playground
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.kambo.klodian.didactic_playground.databinding.ActivityMainBinding
 import com.kambo.klodian.didactic_playground.databinding.DialogViewBinding
 import com.kambo.klodian.didactic_playground.ui.main.FragmentProfile
 import com.kambo.klodian.didactic_playground.ui.main.FragmentSearch
+import com.kambo.klodian.didactic_playground.ui.main.MessageFragmentDialog
 
 
 /**
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_search -> {
 
                     // Setting the custom view in the Dialgo
-                    val binding = DialogViewBinding.inflate(LayoutInflater.from(this),)
+                    val binding = DialogViewBinding.inflate(LayoutInflater.from(this))
                     binding.icon.setOnClickListener {
                         Toast.makeText(this, "Dialog Alert pressed", Toast.LENGTH_SHORT).show()
                     }
@@ -116,6 +117,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, FragmentProfile())
                         .commitNow()
+
+                    MessageFragmentDialog().show(supportFragmentManager, "")
                 }
             }
             true

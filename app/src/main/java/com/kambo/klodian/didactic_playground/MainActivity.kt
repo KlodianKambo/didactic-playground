@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.kambo.klodian.didactic_playground.databinding.ActivityMainBinding
 import com.kambo.klodian.didactic_playground.ui.main.FragmentProfile
 import com.kambo.klodian.didactic_playground.ui.main.FragmentSearch
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
      * [Lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle#alc)
      */
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
@@ -30,18 +32,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Toast.makeText(this,"Pressed ${item.title}",Toast.LENGTH_SHORT).show()
+
         return when (item.itemId) {
-
-            // nav_menu
-            R.id.action_search -> {
-                // Handle Option 1 click
-                true
-            }
-            R.id.action_person -> {
-                // Handle Option 2 click
-                true
-            }
-
             R.id.action_settings -> {
                 // Handle Option 2 click
                 true
@@ -56,10 +49,11 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(LayoutInflater.from(this),null,false)
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(this), null, false)
 
         // sets the layout to be rendered for this activity
         setContentView(binding.root)
@@ -72,8 +66,18 @@ class MainActivity : AppCompatActivity() {
         //      parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
         binding.bottomNavigationView.setOnItemSelectedListener { it ->
+            Snackbar.make(
+                binding.bottomNavigationView,
+                "Pressed ${it.title}",
+                Snackbar.LENGTH_INDEFINITE
+            ).run {
+                setAction("Ok") {
+                    dismiss()
+                }
+                show()
+            }
 
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.action_search -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, FragmentSearch.newInstance())

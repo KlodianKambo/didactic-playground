@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import com.kambo.klodian.didactic_playground.databinding.ActivityMainBinding
 import com.kambo.klodian.didactic_playground.ui.main.FragmentProfile
@@ -32,16 +33,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Toast.makeText(this,"Pressed ${item.title}",Toast.LENGTH_SHORT).show()
 
         return when (item.itemId) {
             R.id.action_settings -> {
                 // Handle Option 2 click
+                Snackbar.make(
+                    binding.bottomNavigationView,
+                    "Pressed ${item.title}",
+                    Snackbar.LENGTH_INDEFINITE
+                ).run {
+                    setAction("Ok") {
+                        dismiss()
+                    }
+                    show()
+                }
                 true
             }
 
             R.id.action_learn -> {
                 // Handle Option 2 click
+                Toast.makeText(this, "Pressed ${item.title}", Toast.LENGTH_SHORT).show()
                 true
             }
 
@@ -66,22 +77,27 @@ class MainActivity : AppCompatActivity() {
         //      parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
         binding.bottomNavigationView.setOnItemSelectedListener { it ->
-            Snackbar.make(
-                binding.bottomNavigationView,
-                "Pressed ${it.title}",
-                Snackbar.LENGTH_INDEFINITE
-            ).run {
-                setAction("Ok") {
-                    dismiss()
-                }
-                show()
-            }
 
             when (it.itemId) {
                 R.id.action_search -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, FragmentSearch.newInstance())
                         .commitNow()
+
+                    AlertDialog.Builder(this)
+                        .setMessage("Hello, didactic playground")
+                        .setTitle("Snacks and Dialogs")
+                        .setCancelable(false)
+                        .setIcon(R.drawable.ic_person_pin)
+                        .setPositiveButton("Ok") { dialog, _ ->
+                            // TODO implement your logic here, then dismiss
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("Cancel") { dialog, _ ->
+                            // TODO implement your logic here, then dismiss
+                            dialog.dismiss()
+                        }
+                        .show()
                 }
 
                 R.id.action_person -> {

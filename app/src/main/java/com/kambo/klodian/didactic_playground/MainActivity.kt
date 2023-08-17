@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import com.kambo.klodian.didactic_playground.databinding.ActivityMainBinding
+import com.kambo.klodian.didactic_playground.databinding.DialogViewBinding
 import com.kambo.klodian.didactic_playground.ui.main.FragmentProfile
 import com.kambo.klodian.didactic_playground.ui.main.FragmentSearch
 
@@ -80,17 +81,28 @@ class MainActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.action_search -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, FragmentSearch.newInstance())
-                        .commitNow()
+
+                    // Setting the custom view in the Dialgo
+                    val binding = DialogViewBinding.inflate(LayoutInflater.from(this),)
+                    binding.icon.setOnClickListener {
+                        Toast.makeText(this, "Dialog Alert pressed", Toast.LENGTH_SHORT).show()
+                    }
 
                     AlertDialog.Builder(this)
                         .setMessage("Hello, didactic playground")
                         .setTitle("Snacks and Dialogs")
                         .setCancelable(false)
                         .setIcon(R.drawable.ic_person_pin)
+                        .setView(binding.root)
                         .setPositiveButton("Ok") { dialog, _ ->
+
                             // TODO implement your logic here, then dismiss
+
+                            // mocked logic to perform an action, can be deleted
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.container, FragmentSearch.newInstance())
+                                .commitNow()
+
                             dialog.dismiss()
                         }
                         .setNegativeButton("Cancel") { dialog, _ ->

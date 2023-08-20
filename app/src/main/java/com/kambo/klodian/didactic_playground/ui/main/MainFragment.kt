@@ -11,6 +11,8 @@ import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.kambo.klodian.didactic_playground.R
 import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
 
@@ -25,15 +27,15 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val settingsPreferences: SharedPreferences by lazy {
-        requireContext()
-            .applicationContext
-            .getSharedPreferences("settings", Context.MODE_PRIVATE)
-    }
-
-    private val userPreferences: SharedPreferences by lazy {
-        requireContext()
-            .applicationContext
-            .getSharedPreferences("user", Context.MODE_PRIVATE)
+        EncryptedSharedPreferences.create(
+            requireContext().applicationContext,
+            "settings",
+            MasterKey.Builder(requireContext().applicationContext)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build(),
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
     }
 
     companion object {
@@ -87,7 +89,7 @@ class MainFragment : Fragment() {
                 }
         }
 
-        val selectedRadioIndex = settingsPreferences.getInt(KEY_RADIO,0)
+        val selectedRadioIndex = settingsPreferences.getInt(KEY_RADIO, 0)
         binding.radioGroup.check(binding.radioGroup[selectedRadioIndex].id)
 
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->

@@ -1,10 +1,14 @@
 package com.kambo.klodian.didactic_playground.ui.main
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.get
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.kambo.klodian.didactic_playground.R
@@ -20,8 +24,24 @@ import com.kambo.klodian.didactic_playground.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
+    private val settingsPreferences: SharedPreferences by lazy {
+        requireContext()
+            .applicationContext
+            .getSharedPreferences("settings", Context.MODE_PRIVATE)
+    }
+
+    private val userPreferences: SharedPreferences by lazy {
+        requireContext()
+            .applicationContext
+            .getSharedPreferences("user", Context.MODE_PRIVATE)
+    }
+
     companion object {
         fun newInstance() = MainFragment()
+        private const val KEY_NAME = "KEY_NAME"
+        private const val KEY_TERMS = "KEY_TERMS"
+        private const val KEY_RADIO = "KEY_RADIO"
+        private const val KEY_SPINNER = "KEY_SPINNER"
     }
 
     // provides the ui data
@@ -40,6 +60,14 @@ class MainFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         binding = FragmentMainBinding.bind(view)
 
+        binding.editText.setText(settingsPreferences.getString(KEY_NAME, null))
+        binding.editText.doAfterTextChanged {
+            settingsPreferences
+                .edit()
+                .putString(KEY_NAME, it.toString())
+                .apply()
+        }
+
         // hook click listener to button
         // setOnClickListener is from View, button inherits from View. See inheritance of the OOP
         binding.button.setOnClickListener {
@@ -48,14 +76,26 @@ class MainFragment : Fragment() {
         }
 
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val radioButton: RadioButton = view.findViewById(checkedId)
-            val selectedOption = radioButton.text.toString()
-            Toast.makeText(
-                requireContext(),
-                "Selected option: $selectedOption",
-                Toast.LENGTH_SHORT
-            ).show()
+            group
+                .indexOfChild(view.findViewById(checkedId))
+                .takeIf { it > -1 }
+                ?.also { childIndex ->
+                    settingsPreferences
+                        .edit()
+                        .putInt(KEY_RADIO, childIndex)
+                        .apply()
+                }
         }
+
+        val selectedRadioIndex = settingsPreferences.getInt(KEY_RADIO,0)
+        binding.radioGroup.check(binding.radioGroup[selectedRadioIndex].id)
+
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            settingsPreferences.edit().putBoolean(KEY_TERMS, isChecked).apply()
+        }
+
+        binding.checkBox.isChecked = settingsPreferences.getBoolean(KEY_TERMS, false)
+
         addSpinner()
         return view
     }
@@ -63,6 +103,7 @@ class MainFragment : Fragment() {
     private fun addSpinner() {
         // Spinner options
         val spinnerData = listOf("Option 1", "Option 2", "Option 3")
+
         val spinnerAdapter: ArrayAdapter<String> =
             ArrayAdapter<String>(
                 requireContext(),
@@ -81,6 +122,11 @@ class MainFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
+
+                settingsPreferences.edit()
+                    .putInt(KEY_SPINNER, position)
+                    .apply()
+
                 // consumer action on selection
                 val selectedOption = spinnerData[position]
                 Toast.makeText(
@@ -92,5 +138,8 @@ class MainFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        val spinnerIndex = settingsPreferences.getInt(KEY_SPINNER, 0)
+        binding.spinner.setSelection(spinnerIndex)
     }
 }
